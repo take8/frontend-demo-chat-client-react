@@ -33,7 +33,7 @@ export class MessageFeed extends React.Component<
           .reverse()
           .map(message => (
             <Comment key={message.id}>
-              <Comment.Avatar src={message.user.avatar || "/img/avatar.png"} />
+              <Comment.Avatar src={message.user.avatar || "/favicon.ico"} />
               <Comment.Content>
                 <Comment.Author as="a">{message.user.name}</Comment.Author>
                 <Comment.Metadata>
