@@ -1,6 +1,7 @@
 import * as React from "react";
 import { fetchMessages, Message } from "../client";
 import { Comment, Header } from "semantic-ui-react";
+import Axios, { CancelTokenSource } from "axios";
 
 interface MessageFeedProps {
   channelName: string;
@@ -16,12 +17,16 @@ export class MessageFeed extends React.Component<
   MessageFeedProps,
   MessageFeedState
 > {
+  private cancelTokenSource: CancelTokenSource;
+
   constructor(props: MessageFeedProps) {
     super(props);
-    // stateの初期状態を定義
+    // state の初期状態を定義
     this.state = {
       messages: []
     };
+    // TODO: null を入れたいがエラーになってしまう
+    this.cancelTokenSource = Axios.CancelToken.source();
   }
 
   public render() {
@@ -67,16 +72,32 @@ export class MessageFeed extends React.Component<
     }
   }
 
+  public componentWillUnmount() {
+    // 非同期処理のキャンセル
+    if (this.cancelTokenSource) {
+      this.cancelTokenSource.cancel("This component has been unmounted");
+    }
+  }
+
   private fetchMessages = (channelName: string) => {
     // shouldReload が true の場合
     if (this.props.shouldReload) this.props.setShouldReload(false);
 
-    fetchMessages(channelName)
+    // cancelTokenを生成
+    this.cancelTokenSource = Axios.CancelToken.source();
+
+    fetchMessages(channelName, {}, this.cancelTokenSource.token)
       .then(response => {
         this.setState({ messages: response.data.messages });
       })
       .catch(err => {
-        console.log(err);
+        if (Axios.isCancel(err)) {
+          // アンマウントされていた場合
+          console.log(err);
+        } else {
+          // 通常のエラー
+          console.log(err);
+        }
       });
   };
 }
