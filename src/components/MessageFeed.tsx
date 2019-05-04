@@ -4,6 +4,8 @@ import { Comment, Header } from "semantic-ui-react";
 
 interface MessageFeedProps {
   channelName: string;
+  shouldReload: boolean;
+  setShouldReload: (shouldReload: boolean) => void;
 }
 
 interface MessageFeedState {
@@ -51,13 +53,24 @@ export class MessageFeed extends React.Component<
     this.fetchMessages(this.props.channelName);
   }
 
+  /**
+   * props が更新されたとき
+   * @param prevProps
+   */
   public componentDidUpdate(prevProps: MessageFeedProps) {
-    if (prevProps.channelName !== this.props.channelName) {
+    if (
+      prevProps.channelName !== this.props.channelName ||
+      // shouldReload が true に変わったとき
+      (!prevProps.shouldReload && this.props.shouldReload)
+    ) {
       this.fetchMessages(this.props.channelName);
     }
   }
 
   private fetchMessages = (channelName: string) => {
+    // shouldReload が true の場合
+    if (this.props.shouldReload) this.props.setShouldReload(false);
+
     fetchMessages(channelName)
       .then(response => {
         this.setState({ messages: response.data.messages });
