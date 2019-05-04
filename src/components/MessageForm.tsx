@@ -1,13 +1,7 @@
 import * as React from "react";
 import { postMessage, Message } from "../client";
-import {
-  Button,
-  Form,
-  Segment,
-  TextArea,
-  Dimmer,
-  Loader
-} from "semantic-ui-react";
+import { Button, Form, Segment, Dimmer, Loader } from "semantic-ui-react";
+import TextareaAutosize from "react-textarea-autosize";
 
 interface MessageFormProps {
   channelName: string;
@@ -46,8 +40,8 @@ export class MessageForm extends React.Component<
         {/* onSubmitの方が、ボタンにonClickで登録するより、Enterキーでイベント実行されるなど都合が良い */}
         <Form onSubmit={this.handleFormSubmit}>
           <Form.Field>
-            <TextArea
-              autoHeight
+            {/* https://react.semantic-ui.com/addons/text-area/ */}
+            <TextareaAutosize
               placeholder="Write your message"
               value={this.state.body}
               onChange={this.handleTextAreaChange}

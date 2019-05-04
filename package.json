@@ -9,6 +9,7 @@
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.0",
+    "react-textarea-autosize": "^7.1.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.86.0"
   },
@@ -19,6 +20,7 @@
     "@types/react-dom": "^16.8.4",
     "@types/react-router": "^4.4.5",
     "@types/react-router-dom": "^4.3.2",
+    "@types/react-textarea-autosize": "^4.3.4",
     "typescript": "^3.4.5"
   },
   "scripts": {
