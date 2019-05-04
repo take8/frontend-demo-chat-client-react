@@ -1,6 +1,6 @@
 import * as React from "react";
 import { fetchMessages, Message } from "../client";
-import { Comment, Header } from "semantic-ui-react";
+import { Comment, Header, Dimmer, Loader } from "semantic-ui-react";
 import Axios, { CancelTokenSource } from "axios";
 
 interface MessageFeedProps {
@@ -11,6 +11,7 @@ interface MessageFeedProps {
 
 interface MessageFeedState {
   messages: Message[];
+  isLoading: boolean;
 }
 
 export class MessageFeed extends React.Component<
@@ -23,13 +24,21 @@ export class MessageFeed extends React.Component<
     super(props);
     // state の初期状態を定義
     this.state = {
-      messages: []
+      messages: [],
+      isLoading: true
     };
     // TODO: null を入れたいがエラーになってしまう
     this.cancelTokenSource = Axios.CancelToken.source();
   }
 
   public render() {
+    if (this.state.isLoading) {
+      return (
+        <Dimmer active>
+          <Loader />
+        </Dimmer>
+      );
+    }
     return (
       <Comment.Group>
         <Header as="h3" dividing>
@@ -88,7 +97,10 @@ export class MessageFeed extends React.Component<
 
     fetchMessages(channelName, {}, this.cancelTokenSource.token)
       .then(response => {
-        this.setState({ messages: response.data.messages });
+        this.setState({
+          messages: response.data.messages,
+          isLoading: false
+        });
       })
       .catch(err => {
         if (Axios.isCancel(err)) {

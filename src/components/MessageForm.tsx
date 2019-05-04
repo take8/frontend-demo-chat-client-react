@@ -1,6 +1,13 @@
 import * as React from "react";
 import { postMessage, Message } from "../client";
-import { Button, Form, Segment, TextArea } from "semantic-ui-react";
+import {
+  Button,
+  Form,
+  Segment,
+  TextArea,
+  Dimmer,
+  Loader
+} from "semantic-ui-react";
 
 interface MessageFormProps {
   channelName: string;
@@ -9,6 +16,7 @@ interface MessageFormProps {
 
 interface MessageFormState {
   body?: string;
+  isLoading: boolean;
 }
 
 export class MessageForm extends React.Component<
@@ -18,13 +26,21 @@ export class MessageForm extends React.Component<
   constructor(props: MessageFormProps) {
     super(props);
     this.state = {
-      body: ""
+      body: "",
+      isLoading: false
     };
     this.handleTextAreaChange = this.handleTextAreaChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
   public render() {
+    if (this.state.isLoading) {
+      return (
+        <Dimmer active>
+          <Loader />
+        </Dimmer>
+      );
+    }
     return (
       <Segment basic textAlign="center">
         {/* onSubmitの方が、ボタンにonClickで登録するより、Enterキーでイベント実行されるなど都合が良い */}
@@ -52,13 +68,15 @@ export class MessageForm extends React.Component<
   }
 
   private handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
+    // 送信直前にスピナーを表示
+    this.setState({ isLoading: true });
     event.preventDefault();
     const payload = {
       body: this.state.body
     } as Message;
     postMessage(this.props.channelName, payload)
       .then(() => {
-        this.setState({ body: "" });
+        this.setState({ body: "", isLoading: false });
         // 送信成功時にリロードするため、 props を更新して親コンポーネントに検知させる
         // TODO: 他のユーザが送信成功時にリロードするようにすべき
         this.props.setShouldReload(true);
