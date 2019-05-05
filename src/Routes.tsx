@@ -6,8 +6,8 @@ import { ChannelList } from "./components";
 import { Channel } from "./containers";
 import { Container } from "semantic-ui-react";
 
-// BrowserRouter: History APIを使用したRoutingのために利用
 const routes = (
+  // BrowserRouter: History API を使用したRoutingのために利用
   <BrowserRouter>
     <div id="wrapper">
       <ChannelList />

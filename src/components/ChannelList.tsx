@@ -55,29 +55,27 @@ export class ChannelList extends React.Component<ChannelListProps, ChannelListSt
   /**
    * コンポーネントがマウントされたとき
    */
-  public componentDidMount() {
-    this.fetchChannels();
+  public async componentDidMount() {
+    await this.fetchChannels();
   }
 
-  private fetchChannels = () => {
+  private fetchChannels = async () => {
     // cancelTokenを生成
     this.cancelTokenSource = Axios.CancelToken.source();
 
-    fetchChannels({}, this.cancelTokenSource.token)
-      .then(response => {
-        this.setState({
-          channels: response.data.channels,
-          isLoading: false
-        });
-      })
-      .catch(err => {
-        if (Axios.isCancel(err)) {
-          // アンマウントされていた場合
-          console.log(err);
-        } else {
-          // 通常のエラー
-          console.log(err);
-        }
-      });
+    const response = await fetchChannels({}, this.cancelTokenSource.token)
+    .catch(err => {
+      if (Axios.isCancel(err)) {
+        // アンマウントされていた場合
+        console.log(err);
+      } else {
+        // 通常のエラー
+        console.log(err);
+      }
+    });
+    this.setState({
+      channels: response ? response.data.channels : [],
+      isLoading: false
+    });
   };
 };

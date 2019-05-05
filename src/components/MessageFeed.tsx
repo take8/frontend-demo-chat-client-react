@@ -41,7 +41,8 @@ export class MessageFeed extends React.Component<
     }
     return (
       <Comment.Group style={{ padding: "0 1rem 12rem 1rem" }}>
-        <Header as="h3" dividing style={{ position: "fixed", width: "100%", background: "#fff", zIndex: "1", paddingTop: "1rem" }}>
+        <Header as="h3" dividing 
+            style={{ position: "fixed", width: "100%", background: "#fff", zIndex: "1", paddingTop: "1rem" }}>
           {this.props.channelName}
         </Header>
         <div style={{ paddingTop: "3.5rem" }}>
@@ -68,8 +69,8 @@ export class MessageFeed extends React.Component<
   /**
    * コンポーネントがマウントされたとき
    */
-  public componentDidMount() {
-    this.fetchMessages(this.props.channelName);
+  public async componentDidMount() {
+    await this.fetchMessages(this.props.channelName);
   }
 
   /**
@@ -93,28 +94,26 @@ export class MessageFeed extends React.Component<
     }
   }
 
-  private fetchMessages = (channelName: string) => {
+  private fetchMessages = async (channelName: string) => {
     // shouldReload が true の場合
     if (this.props.shouldReload) this.props.setShouldReload(false);
 
     // cancelTokenを生成
     this.cancelTokenSource = Axios.CancelToken.source();
 
-    fetchMessages(channelName, {}, this.cancelTokenSource.token)
-      .then(response => {
-        this.setState({
-          messages: response.data.messages,
-          isLoading: false
-        });
-      })
-      .catch(err => {
-        if (Axios.isCancel(err)) {
-          // アンマウントされていた場合
-          console.log(err);
-        } else {
-          // 通常のエラー
-          console.log(err);
-        }
-      });
+    const response = await fetchMessages(channelName, {}, this.cancelTokenSource.token)
+    .catch(err => {
+      if (Axios.isCancel(err)) {
+        // アンマウントされていた場合
+        console.log(err);
+      } else {
+        // 通常のエラー
+        console.log(err);
+      }
+    });
+    this.setState({
+      messages: response ? response.data.messages : [],
+      isLoading: false
+    });
   };
 }

@@ -62,22 +62,20 @@ export class MessageForm extends React.Component<
     this.setState({ body: event.currentTarget.value });
   }
 
-  private handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
+  private async handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
     // 送信直前にスピナーを表示
     this.setState({ isLoading: true });
     event.preventDefault();
     const payload = {
       body: this.state.body
     } as Message;
-    postMessage(this.props.channelName, payload)
-      .then(() => {
-        this.setState({ body: "", isLoading: false });
-        // 送信成功時にリロードするため、 props を更新して親コンポーネントに検知させる
-        // TODO: 他のユーザが送信成功時にリロードするようにすべき
-        this.props.setShouldReload(true);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    await postMessage(this.props.channelName, payload)
+    .catch(err => {
+      console.log(err);
+    });
+    this.setState({ body: "", isLoading: false });
+    // 送信成功時にリロードするため、 props を更新して親コンポーネントに検知させる
+    // TODO: 他のユーザが送信成功時にリロードするようにすべき
+    this.props.setShouldReload(true);
   }
 }
