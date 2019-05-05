@@ -65,6 +65,9 @@ export class MessageFeed extends React.Component<
     );
   }
 
+  /**
+   * コンポーネントがマウントされたとき
+   */
   public componentDidMount() {
     this.fetchMessages(this.props.channelName);
   }
