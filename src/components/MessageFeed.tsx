@@ -40,25 +40,27 @@ export class MessageFeed extends React.Component<
       );
     }
     return (
-      <Comment.Group>
-        <Header as="h3" dividing>
+      <Comment.Group style={{ padding: "0 1rem 12rem 1rem" }}>
+        <Header as="h3" dividing style={{ position: "fixed", width: "100%", background: "#fff", zIndex: "1", paddingTop: "1rem" }}>
           {this.props.channelName}
         </Header>
-        {this.state.messages
-          .slice()
-          .reverse()
-          .map(message => (
-            <Comment key={message.id}>
-              <Comment.Avatar src={message.user.avatar || "/favicon.ico"} />
-              <Comment.Content>
-                <Comment.Author as="a">{message.user.name}</Comment.Author>
-                <Comment.Metadata>
-                  <div>{message.date}</div>
-                </Comment.Metadata>
-                <Comment.Text>{message.body}</Comment.Text>
-              </Comment.Content>
-            </Comment>
-          ))}
+        <div style={{ paddingTop: "3.5rem" }}>
+          {this.state.messages
+            .slice()
+            .reverse()
+            .map(message => (
+              <Comment key={message.id}>
+                <Comment.Avatar src={message.user.avatar || "/favicon.ico"} />
+                <Comment.Content>
+                  <Comment.Author as="a">{message.user.name}</Comment.Author>
+                  <Comment.Metadata>
+                    <div>{message.date}</div>
+                  </Comment.Metadata>
+                  <Comment.Text>{message.body}</Comment.Text>
+                </Comment.Content>
+              </Comment>
+            ))}
+        </div>
       </Comment.Group>
     );
   }

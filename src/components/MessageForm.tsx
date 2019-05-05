@@ -36,7 +36,8 @@ export class MessageForm extends React.Component<
       );
     }
     return (
-      <Segment basic textAlign="center">
+      <Segment basic textAlign="center" 
+          style={{ position: "fixed", bottom: "0", width: "calc(100% - 15rem)", background: "#fff" }}>
         {/* onSubmitの方が、ボタンにonClickで登録するより、Enterキーでイベント実行されるなど都合が良い */}
         <Form onSubmit={this.handleFormSubmit}>
           <Form.Field>
