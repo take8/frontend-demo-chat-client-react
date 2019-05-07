@@ -10,6 +10,13 @@ create-react-app frontend-demo-chat-client-react --typescript
 npm start
 ```
 
+## 技術スタック
+
+- SPA Framework: React
+- Language: TypeScript
+- CSS Framework: Semantic UI
+- HTTP Client: Axios
+
 ## スタイルの調整の仕方
 
 Semantic UI, Semantic UI React を使用しているので、以下を参考に調べる。
@@ -26,3 +33,7 @@ Semantic UI, Semantic UI React を使用しているので、以下を参考に�
 ```react
 <Header style={{ position: "fixed", width: "100%", background: "#fff", zIndex: "1", paddingTop: "1rem" }}>
 ```
+
+## Routing の書き方
+
+Routing ファイルを独立して作成する形ではなく、ナビゲーションなどのコンポーネントに入れ込むイメージらしい。
